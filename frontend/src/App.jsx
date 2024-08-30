@@ -5,7 +5,7 @@ import L, { icon } from 'leaflet';
 // Example icon import (custom marker)
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import MapBox from './component/WeatherBox/MapBox';
-
+import WeatherMain from './component/WeatherBox/W-Main';
 
 const App = () => {
   const position = [25.3176, 83.0254]; // Centered on Varanasi, Uttar Pradesh
@@ -21,10 +21,10 @@ const App = () => {
   return (
     <>
     <Navbar />
-    <h1 className="text-3xl font-bold underline">
+    {/* <h1 className="text-3xl font-bold underline">
       Ganga world!
-    </h1>
-    <MapBox position={position} customIcon={customIcon} />
+    </h1> */}
+    <WeatherMain />
   </>
   )
 }

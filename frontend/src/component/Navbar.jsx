@@ -1,19 +1,50 @@
-import React from 'react'
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
-  return (
-    <div>
-        <div >
-            <ul className='h-[10vh] p-2  w-full'>
-                <li className='w-1/12 '><img className='w-full bg-cover' src="./Namami Gange Logo_English.jpg" alt="" /></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-            </ul>
-        </div>
-    </div>
-  )
-}
+  const Box_content = [
+    {
+      icon: './aius.jpg',
+      toLink: '/login',
+    },
+    {
+      icon: './aius.jpg',
+      toLink: '/weather',
+    },
+    {
+      icon: './aius.jpg',
+      toLink: '/contact',
+    },
+  ];
 
-export default Navbar
+  return (
+    <div className="flex w-20 bg-blue-200 h-screen fixed">
+      <ul className="h-full mt-4">
+        <li>
+          <img
+            className="w-full"
+            src="./Namami_Gange_Logo_English-removebg-preview.png"
+            alt="Logo"
+          />
+        </li>
+        <div className='flex flex-col gap-10 mt-20 justify-center items-center'>
+          {Box_content.map((con, index) => (
+            <Box key={index} icon={con.icon} toLink={con.toLink} />
+          ))}
+        </div>
+      </ul>
+    </div>
+  );
+};
+
+export default Navbar;
+
+const Box = ({ icon, toLink }) => {
+  return (
+    <div className="w-10 bg-blue-100 h-10">
+      <Link to={toLink}>
+        <img className="w-full h-full" src={icon} alt="icon" />
+      </Link>
+    </div>
+  );
+};

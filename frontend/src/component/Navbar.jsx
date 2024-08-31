@@ -15,6 +15,10 @@ const Navbar = () => {
       icon: './aius.jpg',
       toLink: '/contact',
     },
+    {
+      icon: './aius.jpg',
+      toLink: '/ppt',
+    },
   ];
 
   return (

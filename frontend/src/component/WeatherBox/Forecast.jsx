@@ -3,9 +3,9 @@ import Switcher11 from '../Switcher'
 
 const Forecast = () => {
   return (
-    <div className='isolate aspect-video  rounded-xl bg-white/5 shadow-lg ring-1 ring-black/5 w-[30%] h-[42vh]'>
-        <h1 className='p-3'>Forecast</h1>
-        
+    <div className='isolate aspect-video bg-white/30 shadow-lg ring-1 ring-black/10 w-[30%] h-[42vh] rounded-2xl'>
+        <Switcher11/>
+        <h2 className='  '>Forecast</h2>
     </div>
   )
 }

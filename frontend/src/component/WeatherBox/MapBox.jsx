@@ -33,7 +33,7 @@ import { MapContainer, TileLayer, Marker, Popup, LayerGroup, LayersControl } fro
 
 const MapBox = () => {
   return (
-    <div className='isolate aspect-video  rounded-xl bg-white/5 shadow-lg ring-1 ring-black/5 w-1/2 h-[40vh] '>
+    <div className='isolate aspect-video bg-white/20 shadow-lg ring-1 ring-black/10 w-1/2 h-[40vh] rounded-2xl '>
     </div>
   )
 }

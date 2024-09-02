@@ -6,7 +6,7 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background-image: url(https://user-images.githubusercontent.com/13468728/233847739-219cb494-c265-4554-820a-bd3424c59065.jpg);
+  background-image: url(/oksirji.jpg);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -16,9 +16,9 @@
     position: relative;
     max-width: 400px;
     background-color: transparent;
-    border: 2px solid rgba(255, 255, 255, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.584);
     border-radius: 20px;
-    backdrop-filter: blur(55px);
+    backdrop-filter: blur(70px);
     display: flex;
     justify-content: center;
     align-items: center;

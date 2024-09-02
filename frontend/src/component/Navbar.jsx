@@ -22,7 +22,7 @@ const Navbar = () => {
   ];
 
   return (
-    <div className="flex w-20 bg-blue-50 h-screen fixed">
+    <div className="flex w-20  h-screen fixed isolate aspect-video bg-white/70 shadow-lg ring-1 ring-black/10">
       <ul className="h-full mt-4">
         <li>
           <img

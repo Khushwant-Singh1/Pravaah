@@ -38,4 +38,12 @@ const MapBox = ({position , customIcon}) => {
 //   )
 // }
 
+
+// const MapBox = () => {
+//   return (
+//     <div className='isolate aspect-video  rounded-xl bg-white/5 shadow-lg ring-1 ring-black/5 w-1/2 h-[40vh] '>
+//     </div>
+//   )
+// }
+
 export default MapBox

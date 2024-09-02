@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
-import './Login.css';
 
-const Login = () => {
+const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
 
-  const handleLogin = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
 
-    const response = await fetch('http://localhost:5000/login', {
+    const response = await fetch('http://localhost:5000/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -20,9 +19,7 @@ const Login = () => {
     const data = await response.json();
 
     if (response.ok) {
-      setMessage('Login successful');
-      // Save the token to localStorage or use context for global state
-      localStorage.setItem('token', data.token);
+      setMessage('User registered successfully');
     } else {
       setMessage(data.message);
     }
@@ -31,8 +28,8 @@ const Login = () => {
   return (
     <div className='login-container'>
       <section className='login-sec'>
-        <form onSubmit={handleLogin}>
-          <h1>Login</h1>
+        <form onSubmit={handleRegister}>
+          <h1>Register</h1>
           <div className="inputbox">
             <ion-icon name="mail-outline"></ion-icon>
             <input
@@ -53,21 +50,12 @@ const Login = () => {
             />
             <label>Password</label>
           </div>
-          <div className="forget">
-            <label>
-              <input type="checkbox" /> Remember Me
-            </label>
-            <a href="#">Forget Password</a>
-          </div>
-          <button type="submit">Log in</button>
+          <button type="submit">Register</button>
           {message && <p>{message}</p>}
-          <div className="register">
-            <p>Don't have an account? <a href="/register">Register</a></p>
-          </div>
         </form>
       </section>
     </div>
   );
 };
 
-export default Login;
+export default Register;

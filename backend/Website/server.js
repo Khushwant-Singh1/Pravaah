@@ -3,26 +3,27 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
+const axios = require('axios'); // Added axios for API requests
 require('dotenv').config();
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
-.then(() => console.log('MongoDB connected'))
-.catch(err => console.log(err));
+// mongoose.connect(process.env.MONGO_URI, {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+// })
+// .then(() => console.log('MongoDB connected'))
+// .catch(err => console.log(err));
 
-// User Schema
-const userSchema = new mongoose.Schema({
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true }
-});
+// // User Schema
+// const userSchema = new mongoose.Schema({
+//     email: { type: String, required: true, unique: true },
+//     password: { type: String, required: true }
+// });
 
-const User = mongoose.model('User', userSchema);
+// const User = mongoose.model('User', userSchema);
 
 // Register Route
 app.post('/register', async (req, res) => {
@@ -71,6 +72,20 @@ app.post('/login', async (req, res) => {
         res.status(200).json({ token });
     } catch (err) {
         res.status(500).json({ message: 'Server error' });
+    }
+});
+app.get('/weather', async (req, res) => {
+    const city = req.query.city || 'London'; // Default city if none provided
+    const apiKey = process.env.WEATHER_API_KEY; // OpenWeather API Key
+    const weatherUrl = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+    try {
+        const response = await axios.get(weatherUrl);
+        const weatherData = response.data;
+
+        res.status(200).json(weatherData);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching weather data', error: error.message });
     }
 });
 

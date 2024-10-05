@@ -53,29 +53,63 @@ const WeatherDisplay = () => {
 
   return (
     <div className='isolate aspect-video bg-white/20 shadow-lg ring-1 ring-black/10 w-[25%] rounded-2xl '>
-      <h3 className='p-3 '>{city}</h3>
+      <div className='flex w-full justify-center'>
+      <h3 className='p-3 text-xl  '>{city}</h3>
+      </div>
+      
 
       {weatherData && weatherData.weather && weatherData.weather.length > 0 ? (
         <>
           <img 
-            src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}.png`} 
+            src={`weather/${weatherData.weather[0].icon}.svg`} 
             alt={weatherData.weather[0].description}
             className='w-[11.65vh] h-[11.65vh] relative top-8 left-5 ' 
           />
-
-          <h1 className='text-4xl relative text-black left-10 bottom-8'>
+          <div >
+          <h1 className='text-4xl relative text-black pl-10 left-10 bottom-8'>
             {weatherData.main.temp}&deg;C
           </h1>
+          
+          </div>
+          
         </>
       ) : (
         <h1>Loading...</h1>
       )}
 
-      <div className='flex flex-row gap-8 p-1 relative -bottom-8'>
+      <div className='flex flex-row gap-8 p-3 relative -bottom-8'>
+        <div className='flex flex-col w-full gap-1 h-full justify-center items-center'>
         <img src="https://img.icons8.com/?size=100&id=Nn9CKpExQ3wn&format=png&color=000000" alt="" className='w-10 h-10  '/>
-        <img src="https://img.icons8.com/?size=100&id=y9ZLj50ta7xS&format=png&color=000000" alt="" className='w-10 h-10  ' />
+        {weatherData && 
+        (<div> 
+          <p className='text-sm'>{weatherData.wind.speed}km/h</p>
+        </div>)
+        }
+        </div>
+        <div className='flex flex-col w-full h-full justify-center items-center'>
+        <img src="weather/cloud.png" alt="" className='w-10 h-10  ' />
+        {weatherData && 
+        (<div> 
+          <p>{weatherData.clouds.all}</p>
+        </div>)
+        }
+        </div>
+        <div className='flex flex-col w-full h-full justify-center items-center'>
         <img src="https://img.icons8.com/?size=100&id=WD34LOxyxWwv&format=png&color=000000" alt="" className='w-10 h-10  ' />
+        {weatherData && 
+        (<div> 
+          <p>{weatherData.main.feels_like}&deg;C</p>
+        </div>)
+        }
+        </div>
+        {/* <div className='flex flex-col w-full h-full justify-center items-center'>
         <img src="https://img.icons8.com/?size=100&id=5tpnFthSXugw&format=png&color=000000" alt="" className='w-10 h-10'/>
+        {weatherData && 
+        (<div> 
+          <p>{weatherData.main.humidity}</p>
+        </div>)
+        }
+        </div> */}
       </div>    
     </div>
   );

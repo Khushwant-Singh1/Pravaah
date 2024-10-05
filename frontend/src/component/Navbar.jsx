@@ -4,20 +4,20 @@ import { Link } from 'react-router-dom';
 const Navbar = () => {
   const Box_content = [
     {
-      icon: './aius.jpg',
-      toLink: '/login',
+      icon: './icons/home.png',
+      toLink: '/',
     },
     {
-      icon: './aius.jpg',
+      icon: './icons/weather.png',
       toLink: '/weather',
     },
     {
-      icon: './aius.jpg',
-      toLink: '/contact',
+      icon: './icons/chat.png',
+      toLink: '/chat',
     },
     {
-      icon: './aius.jpg',
-      toLink: '/ppt',
+      icon: './icons/user.png',
+      toLink: '/login',
     },
   ];
 
@@ -27,11 +27,11 @@ const Navbar = () => {
         <li>
           <img
             className="w-full"
-            src="./Namami_Gange_Logo_English-removebg-preview.png"
+            src="./main_logo.png"
             alt="Logo"
           />
         </li>
-        <div className='flex flex-col gap-10 mt-20 justify-center items-center'>
+        <div className='flex flex-col gap-12 mt-20 justify-center items-center'>
           {Box_content.map((con, index) => (
             <Box key={index} icon={con.icon} toLink={con.toLink} />
           ))}
@@ -45,7 +45,7 @@ export default Navbar;
 
 const Box = ({ icon, toLink }) => {
   return (
-    <div className="w-10 bg-blue-100 h-10">
+    <div className="w-8 h-8">
       <Link to={toLink}>
         <img className="w-full h-full" src={icon} alt="icon" />
       </Link>

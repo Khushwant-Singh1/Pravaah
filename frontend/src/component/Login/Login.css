@@ -6,7 +6,8 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background-image: url(/oksirji.jpg);
+  background: rgb(38,87,151);
+  background: linear-gradient(180deg, rgba(38,87,151,1) 0%, rgba(87,130,183,1) 38%, rgba(87,130,183,1) 60%, rgba(40,93,161,1) 100%);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;

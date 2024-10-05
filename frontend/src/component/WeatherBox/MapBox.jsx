@@ -1,10 +1,24 @@
-import React from 'react'
-import 'leaflet/dist/leaflet.css'
-import { MapContainer, TileLayer, Marker, Popup, LayerGroup, LayersControl } from 'react-leaflet';
+import React, { useEffect } from 'react';
+import 'leaflet/dist/leaflet.css';
+import { MapContainer, TileLayer, Marker, Popup, LayerGroup, LayersControl, useMap } from 'react-leaflet';
 
-const MapBox = ({position , customIcon}) => {
+// Custom component to fly the map to a new position on city change
+const FlyToPosition = ({ position }) => {
+  const map = useMap();
+
+  useEffect(() => {
+    if (position) {
+      map.flyTo(position, 12);  // Adjust the zoom level here if needed
+    }
+  }, [position, map]);
+
+  return null;
+};
+
+const MapBox = ({ position }) => {
   return (
-    <MapContainer center={position} zoom={12} style={{ height: '300px', width: '50%' , borderRadius: '15px'}} scrollWheelZoom={false}>
+    <MapContainer center={position} zoom={12} style={{ height: '300px', width: '50%', borderRadius: '15px' }} scrollWheelZoom={false}>
+      <FlyToPosition position={position} />
       <LayersControl position="topright">
         <LayersControl.BaseLayer checked name="OpenStreetMap">
           <TileLayer
@@ -19,31 +33,14 @@ const MapBox = ({position , customIcon}) => {
 
         <LayersControl.Overlay checked name="Monitoring Stations">
           <LayerGroup>
-            <Marker position={position} icon={customIcon}>
-              <Popup>Varanasi - Monitoring Station<br />DO: 6.5 mg/L<br />BOD: 3.0 mg/L</Popup>
+            <Marker position={position}>
+              <Popup>{/* Popup content can be dynamic based on the city */}</Popup>
             </Marker>
-            {/* Add more markers here */}
           </LayerGroup>
         </LayersControl.Overlay>
       </LayersControl>
     </MapContainer>
-  )
-}
+  );
+};
 
-
-// const MapBox = () => {
-//   return (
-//     <div className='isolate aspect-video  rounded-xl bg-white/5 shadow-lg ring-1 ring-black/5 w-1/2 h-[40vh] '>
-//     </div>
-//   )
-// }
-
-
-// const MapBox = () => {
-//   return (
-//     <div className='isolate aspect-video  rounded-xl bg-white/5 shadow-lg ring-1 ring-black/5 w-1/2 h-[40vh] '>
-//     </div>
-//   )
-// }
-
-export default MapBox
+export default MapBox;

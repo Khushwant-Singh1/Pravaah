@@ -1,8 +1,4 @@
-# SIH-Ganga
-for sih
-
-### PPT link 
-https://1drv.ms/p/c/850b3284806c5eee/EURfwdIlDCdOtmElXJy_voQBLpgpxFk8Cm14lNVtS8NjFA?e=OBWa48
+# Pravaah
 
 ### Refference Links 
 

@@ -21,6 +21,10 @@ const App = () => {
   return (
     <>
     <WeatherMain />
+
+    <div className='h-screen flex justify-end items-center pl-[600px] w-screen'>
+        <img src='image.png' className=' w-[90%] h-[90%]  object-contain' />
+    </div>
   </>
   )
 }

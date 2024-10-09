@@ -25,25 +25,24 @@ const Main = () => {
 
   return (
     <div className="bac 0 flex h-[100vh] justify-center overflow-hidden p-2 pt-10 w-full">
-      <div className=' absolute text-white/85  text-4xl  top-2'>
+      <div className=' absolute text-white/85  text-4xl  top-20'>
           Pravaah - Real time water quality system
       </div>
       <div className='flex flex-col max-w-7xl items-center w-full p-3 relative left-4 -bottom-2'>
-        <div className='flex w-full flex-row h-[100vh] gap-8 p-4'>
+        <div className='flex w-full flex-row h-[100vh] justify-center items-center gap-8 p-4'>
           {/* Pass city and handler to WeatherDisplay */}
           <WeatherDisplay city={selectedCity} onCityChange={handleCityChange} />
           
           {/* Pass the new position based on the selected city to MapBox */}
           <MapBox position={[cities[selectedCity].lat, cities[selectedCity].lon]} />
-          <Citz />
+          {/* <Citz /> */}
         </div>
-        <div className='flex w-full flex-row h-[100vh] gap-8 p-4'>
+        {/* <div className='flex w-full flex-row h-[100vh] gap-8 p-4'>
           <Forecast />
           <Summary />
-        </div>
-        <div className='flex h-full flex-row'>
-          {/* Additional content can go here */}
-        </div>
+        </div> */}
+        
+        
       </div>
     </div>
   );

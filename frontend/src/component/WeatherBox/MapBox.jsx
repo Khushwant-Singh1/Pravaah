@@ -17,7 +17,7 @@ const FlyToPosition = ({ position }) => {
 
 const MapBox = ({ position }) => {
   return (
-    <MapContainer center={position} zoom={12} style={{ height: '300px', width: '50%', borderRadius: '15px' }} scrollWheelZoom={false}>
+    <MapContainer center={position} zoom={12} style={{ height: '360px', width: '50%', borderRadius: '15px' }} scrollWheelZoom={false}>
       <FlyToPosition position={position} />
       <LayersControl position="topright">
         <LayersControl.BaseLayer checked name="OpenStreetMap">

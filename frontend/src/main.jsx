@@ -11,6 +11,7 @@ import App from './App.jsx';
 import Login from './component/Login/Login.jsx'
 import Register from './component/Login/Register.jsx';
 import Chat from './component/Chat/Chat.jsx';
+import WaterQualityAnalyzer from './component/water-quality-analyzer.jsx';
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
       {
         path: "/chat",
         element: <Chat />
+      },
+      {
+        path: "/weather",
+        element: <WaterQualityAnalyzer />
       }
       
     ]

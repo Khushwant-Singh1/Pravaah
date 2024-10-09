@@ -17,6 +17,28 @@ const WeatherDisplay = ({ city, onCityChange }) => {
   };
 
   const cityNames = Object.keys(cities);
+  
+  const iconMap = {
+    '01d': 'wi-day-sunny',
+    '01n': 'wi-night-clear',
+    '02d': 'wi-day-cloudy',
+    '02n': 'wi-night-alt-cloudy',
+    '03d': 'wi-cloud',
+    '03n': 'wi-cloud',
+    '04d': 'wi-cloudy',
+    '04n': 'wi-cloudy',
+    '09d': 'wi-rain',
+    '09n': 'wi-rain',
+    '10d': 'wi-day-rain',
+    '10n': 'wi-night-rain',
+    '11d': 'wi-thunderstorm',
+    '11n': 'wi-thunderstorm',
+    '13d': 'wi-snow',
+    '13n': 'wi-snow',
+    '50d': 'wi-fog',
+    '50n': 'wi-fog'
+  };
+
 
   useEffect(() => {
     const fetchWeatherData = async () => {
@@ -40,14 +62,14 @@ const WeatherDisplay = ({ city, onCityChange }) => {
     let currentIndex = cityNames.indexOf(city);
     const interval = setInterval(() => {
       currentIndex = (currentIndex + 1) % cityNames.length;
-      onCityChange(cityNames[currentIndex]);  // Notify parent of the city change
+      onCityChange(cityNames[currentIndex]); 
     }, 8000);
 
     return () => clearInterval(interval);
   }, [city, onCityChange, cityNames]);
 
   return (
-    <div className='isolate aspect-video bg-[#2b5893]/70 text-white shadow-xl w-[25%] rounded-2xl '>
+    <div className=' h-[52vh] bg-[#2b5893]/70 text-white shadow-xl w-[30%] rounded-2xl '>
       <div className='flex w-full justify-start pl-2'>
         <h3 className='p-3 text-lg opacity-85 '>{city} Weather</h3>
       </div>
@@ -57,13 +79,16 @@ const WeatherDisplay = ({ city, onCityChange }) => {
           <img 
             src={`weather/${weatherData.weather[0].icon}.svg`} 
             alt={weatherData.weather[0].description}
-            className='w-[11.65vh] h-[11.65vh] relative top-8 left-5 ' 
+            className='w-[11.65vh] h-[11.65vh] relative top-10 left-14 ' 
           />
           <div>
             <h1 className='text-4xl relative pl-10 left-10 bottom-8'>
               {Math.round(weatherData.main.temp * 10) / 10}
-              <span className='absolute text-base h-full left-56'>&deg;C</span>
+              <span className='absolute text-base h-full left-62'>&deg;C</span>
             </h1>
+          </div>
+          <div className='w-full flex justify-end items-end pr-24'>
+            {weatherData.weather[0].description}
           </div>
         </>
       ) : (

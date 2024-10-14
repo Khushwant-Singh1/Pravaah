@@ -4,16 +4,34 @@ from uagents.query import query
 from uagents import Model
 import asyncio
 import json
-# import pickle
 
 app = Flask(__name__)
 CORS(app)
 
 vendorAgent = 'agent1qvsnflrrg4jgsc0uzy5snn08puvshmd4dpkpruaa0zhj3th6n4d6s63w7w2'
-# model = pickle.load(open("./best_model.pkl", 'rb'))
+predictAgent = 'agent1q07hlfwvu6neuh2u7e6g53syjewckjq44skm6er6p6yjfrw33d70varlqzn'
 
 class Request(Model):
     data: str
+
+class PredictRequest(Model):
+    ph: float
+    Hardness: float
+    Solids: float
+    Chloramines: float
+    Sulfate: float
+    Conductivity: float
+    Organic_carbon: float
+    Trihalomethanes: float
+    Turbidity: float
+
+async def predickAgent(data):
+    # Ensure you unpack data when initializing PredictRequest
+    req = PredictRequest(**data)
+    
+    response = await query(destination=predictAgent, message=req, timeout=20.0)
+    data = json.loads(response.decode_payload())
+    return data
 
 async def venderAgent(prompt):
     req = Request(data=prompt)
@@ -25,34 +43,33 @@ async def venderAgent(prompt):
 def post():
     new_entry = request.json
     print(new_entry)
+    
+    # Extract the prompt from the incoming JSON
     input_data = new_entry.get('data')
+    if not input_data:
+        return jsonify({"error": "No input data provided"}), 400
+    
+    # Call the vendor agent asynchronously
     response = asyncio.run(venderAgent(input_data))
     print(response)
     return jsonify(response['message'])
 
-
-@app.route('/index', methods=['POST'])
-def index():
-    return "Index route is working!"
-
-# @app.route('/predict', methods=['POST'])
-# def predict():
-#     try:
-#         data = request.get_json()
-
-#         input_data = data.get('features')  
-        
-#         # prediction = model.predict([input_data])
-
-#         return jsonify({
-#             'success': True,
-#             'prediction': prediction[0]  
-#         })
-#     except Exception as e:
-#         return jsonify({
-#             'success': False,
-#             'error': str(e)
-#         }), 400
+@app.route('/predict', methods=['POST'])
+def predict():
+    data = request.get_json()
+    print(data)
+    
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+    
+    try:
+        # Ensure you're sending a dictionary with the right structure
+        response = asyncio.run(predickAgent(data))
+        print(response)
+        return jsonify(response)
+    except Exception as e:
+        print(f"Error during prediction: {e}")
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=True, port=8080)

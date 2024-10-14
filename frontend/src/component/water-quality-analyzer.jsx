@@ -3,14 +3,18 @@ import Papa from 'papaparse';
 import { Droplets, Zap, Leaf } from 'lucide-react';
 
 const parameters = [
-  { name: 'BOD', icon: <Leaf className="w-5 h-5" />, min: 0, max: 30, step: 0.1, unit: 'mg/L' },
-  { name: 'Conductivity', icon: <Zap className="w-5 h-5" />, min: 0, max: 1000, step: 1, unit: 'μS/cm' },
-  { name: 'Nitrate', icon: <Leaf className="w-5 h-5" />, min: 0, max: 50, step: 0.1, unit: 'mg/L' },
-  { name: 'Total Coliform', icon: null, min: 0, max: 1000, step: 1, unit: 'MPN/100mL' },
-  { name: 'Faecal Coliform', icon: null, min: 0, max: 500, step: 1, unit: 'MPN/100mL' },
-  { name: 'Faecal Streptococci', icon: null, min: 0, max: 500, step: 1, unit: 'MPN/100mL' },
+  { name: 'pH', icon: <Leaf className="w-5 h-5" />, min: 0, max: 14, step: 0.1, unit: '' },
+  { name: 'Hardness', icon: <Zap className="w-5 h-5" />, min: 0, max: 1000, step: 1, unit: 'mg/L' },
+  { name: 'Solids', icon: <Leaf className="w-5 h-5" />, min: 0, max: 50000, step: 1, unit: 'ppm' },
+  { name: 'Chloramines', icon: null, min: 0, max: 10, step: 0.1, unit: 'mg/L' },
+  { name: 'Sulfate', icon: null, min: 0, max: 500, step: 1, unit: 'mg/L' },
+  { name: 'Conductivity', icon: null, min: 0, max: 10000, step: 1, unit: 'µS/cm' },
+  { name: 'Organic_carbon', icon: null, min: 0, max: 50, step: 0.1, unit: 'mg/L' },
+  { name: 'Trihalomethanes', icon: null, min: 0, max: 100, step: 1, unit: 'µg/L' },
+  { name: 'Turbidity', icon: null, min: 0, max: 5, step: 0.1, unit: 'NTU' },
 ];
 
+// hardeness = 75, Solids = 250, Chloramines = 4, Sulfate = 250, Conductivity = 300, Organic_carbon = 10, Trihalomethanes = 100, Turbidity = 5
 function Button({ onClick, children, className }) {
   return (
     <button
@@ -38,33 +42,16 @@ function Input({ id, type, min, max, step, value, onChange, className, placehold
   );
 }
 
-
 export default function WaterQualityAnalyzer() {
   const [values, setValues] = useState(() =>
     parameters.reduce((acc, param) => ({ ...acc, [param.name]: param.min }), {})
   );
   const [prediction, setPrediction] = useState(null);
-  const [useCSV, setUseCSV] = useState(false); // State to toggle between CSV upload and form
+  const [useCSV, setUseCSV] = useState(false);
+  const [csvFile, setCsvFile] = useState(null);
 
-  // Handle file upload
   const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    Papa.parse(file, {
-      header: true,
-      complete: (result) => {
-        const csvData = result.data[0];
-        const newValues = {};
-
-        parameters.forEach((param) => {
-          if (csvData[param.name]) {
-            const value = parseFloat(csvData[param.name]);
-            newValues[param.name] = isNaN(value) ? param.min : value;
-          }
-        });
-
-        setValues((prev) => ({ ...prev, ...newValues }));
-      },
-    });
+    setCsvFile(e.target.files[0]);
   };
 
   const handleInputChange = (name, value) => {
@@ -75,19 +62,61 @@ export default function WaterQualityAnalyzer() {
     setValues((prev) => ({ ...prev, [name]: newValue }));
   };
 
-  const handlePredict = () => {
-    const mockPrediction = (Math.random() * (12 - 1) + 1).toFixed(2);
-    setPrediction(Number(mockPrediction));
+  // Handle manual form submission and prediction
+  const handleSubmit = async () => {
+    const data = {
+      ph: values['pH'],
+      Hardness: values['Hardness'],
+      Solids: values['Solids'],
+      Chloramines: values['Chloramines'],
+      Sulfate: values['Sulfate'],
+      Conductivity: values['Conductivity'],
+      Organic_carbon: values['Organic_carbon'],
+      Trihalomethanes: values['Trihalomethanes'],
+      Turbidity: values['Turbidity']
+    };
+  
+    fetch('http://localhost:8080/predict', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+      .then(response => response.json())
+      .then(result => {
+        console.log(result);
+        setPrediction(result.prediction_percentage);
+      })
+      .catch(error => console.error('Error:', error));
   };
 
-  const classifyOxygenLevel = (level) => {
-    if (level >= 1 && level < 4) return { text: 'Low', color: 'text-red-500' };
-    if (level >= 4 && level < 8) return { text: 'Normal', color: 'text-green-500' };
-    if (level >= 8 && level <= 12) return { text: 'High', color: 'text-blue-500' };
-    return { text: 'Unknown', color: 'text-gray-500' };
+  // Handle CSV submission and prediction
+  const handleCSVSubmit = async () => {
+    if (!csvFile) return;
+
+    const formData = new FormData();
+    formData.append('file', csvFile);
+
+    try {
+      const response = await fetch('http://localhost:8080/predict_csv', {
+        method: 'POST',
+        body: formData,
+      });
+      const result = await response.json();
+      const predictionValue = result.prediction[0][0];
+      setPrediction(predictionValue * 100); // Convert to percentage
+    } catch (error) {
+      console.error('Error during CSV prediction:', error);
+    }
   };
 
-  // Convert data to CSV format and download
+  const classifyWaterQuality = (value) => {
+    if (value >= 80) return { text: 'Good', color: 'text-green-500' };
+    if (value >= 50) return { text: 'Moderate', color: 'text-yellow-500' };
+    return { text: 'Poor', color: 'text-red-500' };
+  };
+
   const handleDownloadCSV = () => {
     const csvData = [
       parameters.map((param) => param.name), // Header row
@@ -95,7 +124,6 @@ export default function WaterQualityAnalyzer() {
     ];
     const csvContent = Papa.unparse(csvData);
 
-    // Create a link and trigger download
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
@@ -112,20 +140,18 @@ export default function WaterQualityAnalyzer() {
         <div className="mb-6">
           <h2 className="text-2xl font-bold mb-2">Water Quality Analyzer</h2>
           <p className="text-white text-opacity-70">
-            {useCSV ? 'Upload a CSV file to predict dissolved oxygen levels' : 'Enter water quality parameters manually'}
+            {useCSV ? 'Upload a CSV file to predict water quality' : 'Enter water quality parameters manually'}
           </p>
         </div>
 
-        {/* Toggle between CSV and Form */}
-        <div className="mb-6">
+        {/* <div className="mb-6">
           <Button onClick={() => setUseCSV(!useCSV)} className="w-full">
             {useCSV ? 'Switch to Manual Input' : 'Switch to CSV Upload'}
           </Button>
-        </div>
+        </div> */}
 
         {useCSV ? (
           <div className="mb-6">
-            {/* CSV Upload */}
             <label htmlFor="csvUpload" className="block text-sm font-medium mb-2">
               Upload CSV File
             </label>
@@ -136,10 +162,12 @@ export default function WaterQualityAnalyzer() {
               onChange={handleFileUpload}
               className="block w-full text-sm text-white file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600"
             />
+            <Button onClick={handleCSVSubmit} className="w-full mt-4">
+              Predict Water Quality from CSV
+            </Button>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-            {/* Manual Input Fields */}
             {parameters.map((param) => (
               <div key={param.name} className="space-y-1">
                 <div className="flex items-center space-x-2">
@@ -164,26 +192,24 @@ export default function WaterQualityAnalyzer() {
         )}
 
         <div className="flex flex-col items-center space-y-4">
-          <Button onClick={handlePredict} className="w-full">
-            Predict Dissolved Oxygen
-            <Droplets className="ml-2 inline-block w-4 h-4" />
-          </Button>
-
-          {/* Add Download CSV Button */}
           {!useCSV && (
-            <Button onClick={handleDownloadCSV} className="w-full">
-              Download CSV
-            </Button>
+            <>
+              <Button onClick={handleSubmit} className="w-full">
+                Predict Water Quality
+                <Droplets className="ml-2 inline-block w-4 h-4" />
+              </Button>
+              
+            </>
           )}
 
           {prediction !== null && (
             <div className="text-center">
-              <p className="text-lg">Predicted Dissolved Oxygen:</p>
-              <p className={`text-4xl font-bold ${classifyOxygenLevel(prediction).color}`}>
-                {prediction} mg/L
+              <p className="text-lg">Predicted Water Quality:</p>
+              <p className={`text-4xl font-bold ${classifyWaterQuality(prediction).color}`}>
+                {prediction.toFixed(2)}%
               </p>
-              <p className={`text-xl ${classifyOxygenLevel(prediction).color}`}>
-                {classifyOxygenLevel(prediction).text}
+              <p className={`text-xl ${classifyWaterQuality(prediction).color}`}>
+                {classifyWaterQuality(prediction).text}
               </p>
             </div>
           )}

@@ -48,7 +48,7 @@ async def query_handler(ctx: Context, sender: str, msg: Request):
     try:
         query = msg.data
         data = ctx.storage.get("data") 
-        ctx.logger.info(f'Data we already have:  {data}')
+        ctx.logger.info(f'Data we already have: {data}')
         prompt = f"""
             You are a customer service proider. You are supposed to answer the user's query in a courteous and a precise way.
             query = {query}
